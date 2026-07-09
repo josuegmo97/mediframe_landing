@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optitronic C.A. — Tecnología médica de imagenología, de principio a fin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/Optitronic.png">
+  <link rel="apple-touch-icon" href="assets/Optitronic.png">
+  <template id="__bundler_thumbnail" data-bg-color="#1E2A22">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#1E2A22"/>
+      <circle cx="600" cy="360" r="150" fill="none" stroke="#9DB582" stroke-width="20"/>
+      <circle cx="600" cy="360" r="60" fill="#9DB582"/>
+      <text x="600" y="600" font-family="Manrope, sans-serif" font-size="90" font-weight="800" fill="#ffffff" text-anchor="middle">Optitronic</text>
+    </svg>
+  </template>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --sage: #9DB582;
+      --sage-deep: #6E8857;
+      --sage-deeper: #4C6239;
+      --sage-soft: #E7EEDF;
+      --sky: #73AFDC;
+      --sky-deep: #3E7CAE;
+      --sky-soft: #E1EEF8;
+      --amber: #D4A84B;
+      --amber-deep: #B0862C;
+      --bg: #F1F4F2;
+      --white: #FFFFFF;
+      --ink: #1E2A22;
+      --ink-2: #2B3A30;
+      --text: #2E2E2E;
+      --text-2: #5A5A5A;
+      --text-3: #8A938C;
+      --line: #E2E7E2;
+      --line-2: #D2DAD2;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-q: cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      font-family: 'Manrope', system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.011em;
+      line-height: 1.5;
+    }
+    body.lang-ja { font-family: 'Noto Sans JP', 'Manrope', system-ui, sans-serif; letter-spacing: 0; }
+    .serif { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+    body.lang-ja .serif { font-family: 'Noto Serif JP', serif; font-style: normal; font-weight: 500; letter-spacing: 0; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+    a { color: inherit; }
+
+    /* ============ HEADER ============ */
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24px; }
+    .header-inner {
+      max-width: 1180px; margin: 0 auto;
+      height: 60px; padding: 0 12px 0 22px;
+      display: flex; align-items: center; gap: 20px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(30,42,34,0.07);
+      border-radius: 18px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 10px 30px rgba(30,42,34,0.06);
+      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+    }
+    .header.dark .header-inner {
+      background: rgba(30,42,34,0.55);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .header.dark .logo-text, .header.dark .nav a { color: rgba(255,255,255,0.88); }
+    .header.dark .nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .header.dark .logo-text small { color: rgba(255,255,255,0.5); }
+
+    .logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+    .logo-mark { width: 38px; height: 38px; border-radius: 10px; background: #fff; object-fit: contain; padding: 2px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(110,136,87,0.25), inset 0 1px 0 rgba(255,255,255,0.3); }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.025em; color: var(--ink); line-height: 1; transition: color 0.4s; white-space: nowrap; }
+    .logo-text small { display: block; font-size: 9.5px; font-weight: 600; letter-spacing: 0.14em; color: var(--text-3); margin-top: 3px; text-transform: uppercase; }
+
+    .nav { display: flex; gap: 2px; margin-left: 4px; }
+    .nav a { font-size: 13.5px; font-weight: 500; color: var(--text); text-decoration: none; padding: 8px 12px; border-radius: 10px; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .nav a:hover { background: rgba(30,42,34,0.06); }
+
+    .header-cta { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    /* language switch */
+    .lang-switch { display: inline-flex; background: rgba(30,42,34,0.06); border: 1px solid rgba(30,42,34,0.08); border-radius: 10px; padding: 3px; gap: 2px; }
+    .header.dark .lang-switch { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.12); }
+    .lang-switch button { font: inherit; font-size: 12px; font-weight: 600; color: var(--text-2); background: none; border: none; cursor: pointer; padding: 5px 9px; border-radius: 7px; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .header.dark .lang-switch button { color: rgba(255,255,255,0.6); }
+    .lang-switch button.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(30,42,34,0.12); }
+    .header.dark .lang-switch button.active { background: var(--sage); color: var(--ink); }
+
+    .btn-pill { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; background: var(--ink); color: var(--white); border: none; border-radius: 11px; font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--ease), background 0.3s; white-space: nowrap; }
+    .btn-pill:hover { transform: translateY(-1px); background: var(--sage-deeper); }
+    .header.dark .btn-pill { background: var(--white); color: var(--ink); }
+    .header.dark .btn-pill:hover { background: var(--sage-soft); }
+
+    .menu-toggle { display: none; background: none; border: none; cursor: pointer; width: 36px; height: 36px; position: relative; color: var(--ink); }
+    .header.dark .menu-toggle { color: #fff; }
+    .menu-toggle span { display: block; width: 18px; height: 1.5px; background: currentColor; position: absolute; left: 9px; transition: all 0.3s var(--ease); }
+    .menu-toggle span:nth-child(1) { top: 14px; }
+    .menu-toggle span:nth-child(2) { top: 21px; }
+    .menu-toggle.open span:nth-child(1) { top: 17px; transform: rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { top: 17px; transform: rotate(-45deg); }
+
+    .mobile-nav { position: fixed; inset: 0; z-index: 99; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.4s var(--ease); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; padding: 100px 24px 40px; }
+    .mobile-nav.open { opacity: 1; pointer-events: auto; }
+    .mobile-nav a { font-size: 30px; color: #fff; text-decoration: none; font-family: 'Instrument Serif', serif; font-style: italic; }
+    body.lang-ja .mobile-nav a { font-family: 'Noto Serif JP', serif; font-style: normal; font-size: 26px; }
+    .mobile-lang { display: flex; gap: 8px; margin-top: 16px; }
+    .mobile-lang button { font: inherit; font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 10px 18px; cursor: pointer; }
+    .mobile-lang button.active { background: var(--sage); color: var(--ink); }
+
+    /* ============ HERO ============ */
+    .hero { position: relative; padding: 168px 32px 80px; overflow: hidden; background: var(--bg); }
+    .hero-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .hero-bg .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.55; }
+    .hero-bg .b1 { width: 620px; height: 620px; background: var(--sage); top: -220px; left: -120px; animation: float1 16s ease-in-out infinite; }
+    .hero-bg .b2 { width: 520px; height: 520px; background: var(--sky); top: -160px; right: -100px; animation: float2 18s ease-in-out infinite; }
+    .hero-bg .b3 { width: 360px; height: 360px; background: var(--amber); bottom: -120px; left: 40%; opacity: 0.3; animation: float1 20s ease-in-out infinite; }
+    @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,40px); } }
+    @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-40px,30px); } }
+    .hero-grid-overlay { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 80% 70% at 50% 35%, black 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 35%, black 20%, transparent 75%); opacity: 0.5; }
+    .hero-inner { position: relative; z-index: 2; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 26px; }
+    .hero-logo { width: 460px; height: auto; margin-bottom: -6px; filter: drop-shadow(0 10px 24px rgba(110,136,87,0.25)); }
+    @media (max-width: 640px) { .hero-logo { width: 150px; } }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 7px 15px 7px 11px; background: rgba(255,255,255,0.7); border: 1px solid var(--line-2); border-radius: 999px; font-size: 12.5px; font-weight: 600; color: var(--sage-deeper); backdrop-filter: blur(8px); }
+    .eyebrow .badge { font-size: 9.5px; font-weight: 700; letter-spacing: 0.05em; background: var(--ink); color: #fff; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(46px, 7.2vw, 100px); font-weight: 700; line-height: 0.96; letter-spacing: -0.04em; color: var(--ink); max-width: 980px; }
+    body.lang-ja .hero h1 { letter-spacing: -0.02em; line-height: 1.15; }
+    .hero h1 .serif { color: var(--sage-deep); font-weight: 400; }
+    body.lang-ja .hero h1 .serif { font-weight: 600; }
+    .hero .lead { font-size: clamp(17px, 1.5vw, 21px); color: var(--text-2); max-width: 640px; line-height: 1.5; font-weight: 400; }
+    body.lang-ja .hero .lead { line-height: 1.7; }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 9px; padding: 16px 28px; background: var(--ink); color: #fff; border: none; border-radius: 13px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--ease), box-shadow 0.3s, background 0.3s; box-shadow: 0 8px 24px rgba(30,42,34,0.18); }
+    .btn-primary:hover { transform: translateY(-2px); background: var(--sage-deeper); box-shadow: 0 14px 34px rgba(30,42,34,0.24); }
+    .btn-primary .arrow { width: 17px; height: 17px; transition: transform 0.3s var(--ease); }
+    .btn-primary:hover .arrow { transform: translateX(3px); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 9px; padding: 16px 26px; background: var(--white); color: var(--ink); border: 1px solid var(--line-2); border-radius: 13px; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--ease), border-color 0.3s; }
+    .btn-secondary:hover { transform: translateY(-2px); border-color: var(--sage); }
+    .trust-line { margin-top: 18px; display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; color: var(--text-3); font-size: 13px; font-weight: 500; }
+    .trust-line span { display: inline-flex; align-items: center; gap: 7px; }
+    .trust-line span svg { width: 15px; height: 15px; color: var(--sage-deep); flex-shrink: 0; }
+
+    .hero-app { position: relative; z-index: 2; margin: 64px auto 0; max-width: 1080px; width: 100%; perspective: 2000px; }
+    .app-window { border-radius: 18px; overflow: hidden; background: var(--ink); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 50px 100px -20px rgba(30,42,34,0.4), 0 0 0 1px rgba(30,42,34,0.05); }
+    .titlebar { height: 38px; background: #28332C; display: flex; align-items: center; gap: 7px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .titlebar .light { width: 11px; height: 11px; border-radius: 50%; }
+    .titlebar .light.r { background: #FF5F57; }
+    .titlebar .light.y { background: #FEBC2E; }
+    .titlebar .light.g { background: #28C840; }
+    .titlebar .tt { margin: 0 auto; transform: translateX(-20px); font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
+    .app-body { display: grid; grid-template-columns: 232px 1fr 248px; min-height: 520px; }
+    .rail { background: #1A241D; border-right: 1px solid rgba(255,255,255,0.05); padding: 18px 14px; display: flex; flex-direction: column; gap: 7px; }
+    .rail-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); text-transform: uppercase; margin: 6px 4px; }
+    .patient-card { background: rgba(157,181,130,0.14); border: 1px solid rgba(157,181,130,0.3); border-radius: 10px; padding: 12px; }
+    .patient-card .nm { font-size: 14px; font-weight: 600; color: #fff; }
+    .patient-card .meta { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+    .patient-card .tag { display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 600; color: var(--sage); background: rgba(157,181,130,0.18); padding: 3px 8px; border-radius: 6px; }
+    .gallery-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px; }
+    .thumb { aspect-ratio: 1; border-radius: 7px; background: radial-gradient(circle at 40% 38%, #E8A87C, #9A3A1E 55%, #3A0F06 90%); }
+    .thumb.add { background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 18px; }
+    .canvas { position: relative; background: #0E1611; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .canvas .scope { width: 78%; aspect-ratio: 4/3; border-radius: 12px; background: radial-gradient(circle at 46% 42%, #F0B589 0%, #C66B3E 26%, #8A3318 52%, #43130A 78%, #1A0703 96%); box-shadow: inset 0 0 80px rgba(0,0,0,0.65); position: relative; }
+    .canvas .scope::after { content: ''; position: absolute; inset: 0; border-radius: 12px; background: radial-gradient(circle at 30% 28%, rgba(255,255,255,0.22), transparent 42%); }
+    .canvas .vignette { position: absolute; inset: 0; box-shadow: inset 0 0 120px rgba(0,0,0,0.5); pointer-events: none; }
+    .rec { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border-radius: 999px; font-size: 11px; color: #fff; font-weight: 600; }
+    .rec::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #FF5F57; animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .voice { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; background: rgba(212,168,75,0.92); backdrop-filter: blur(8px); border-radius: 999px; font-size: 12.5px; color: #3A2D08; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.3); white-space: nowrap; }
+    .voice .bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+    .voice .bars i { width: 2.5px; background: #3A2D08; border-radius: 2px; animation: eq 0.9s ease-in-out infinite; }
+    .voice .bars i:nth-child(1){height:40%;animation-delay:0s}
+    .voice .bars i:nth-child(2){height:90%;animation-delay:.15s}
+    .voice .bars i:nth-child(3){height:60%;animation-delay:.3s}
+    .voice .bars i:nth-child(4){height:100%;animation-delay:.45s}
+    @keyframes eq { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
+    .scan { position: absolute; top: 16px; right: 16px; font-size: 10.5px; font-family: 'SF Mono', ui-monospace, monospace; color: var(--sage); background: rgba(0,0,0,0.45); padding: 4px 9px; border-radius: 7px; }
+    .controls { background: #1A241D; border-left: 1px solid rgba(255,255,255,0.05); padding: 18px 16px; display: flex; flex-direction: column; gap: 16px; }
+    .ctrl-head { display: flex; align-items: center; justify-content: space-between; }
+    .ctrl-head .t { font-size: 12px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+    .auto-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--sage); background: rgba(157,181,130,0.16); padding: 4px 8px; border-radius: 6px; }
+    .auto-toggle .sw { width: 22px; height: 13px; border-radius: 999px; background: var(--sage); position: relative; }
+    .auto-toggle .sw::after { content: ''; position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #fff; top: 2px; right: 2px; }
+    .slider .lbl { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 7px; }
+    .slider .lbl b { color: #fff; font-weight: 600; }
+    .slider .track { height: 4px; border-radius: 999px; background: rgba(255,255,255,0.1); position: relative; }
+    .slider .track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(90deg, var(--sky-deep), var(--sky)); }
+    .slider .track .knob { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #fff; transform: translate(-50%,-50%); box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+
+    /* ============ LOGO STRIP ============ */
+    .logos { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 30px 0; }
+    .logos .wrap { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; text-align: center; }
+    .logos p { font-size: 13px; color: var(--text-3); font-weight: 500; }
+    .logos .compat { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .logos .compat span { font-size: 13px; font-weight: 600; color: var(--text-2); padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
+
+    /* ============ SECTION SCAFFOLD ============ */
+    section { position: relative; }
+    .pad { padding: 130px 0; }
+    .section-tag { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sage-deep); margin-bottom: 22px; }
+    .section-tag::before { content: ''; width: 26px; height: 1px; background: var(--sage); }
+    .dark .section-tag { color: var(--sage); }
+    .dark .section-tag::before { background: var(--sage); }
+    .h2 { font-size: clamp(34px, 5vw, 64px); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; color: var(--ink); }
+    body.lang-ja .h2 { letter-spacing: -0.01em; line-height: 1.25; }
+    .h2 .serif { color: var(--sage-deep); }
+    .dark .h2 { color: #fff; }
+    .dark .h2 .serif { color: var(--sage); }
+    .lead-2 { font-size: 18px; color: var(--text-2); line-height: 1.55; }
+    body.lang-ja .lead-2 { line-height: 1.8; }
+    .dark .lead-2 { color: rgba(255,255,255,0.65); }
+
+    /* ============ WHAT IS ============ */
+    .what { background: var(--bg); }
+    .what-inner { max-width: 940px; margin: 0 auto; text-align: center; }
+    .what .h2 { margin-bottom: 28px; }
+    .what p { font-size: clamp(19px, 2vw, 26px); line-height: 1.45; color: var(--text); font-weight: 400; letter-spacing: -0.02em; }
+    body.lang-ja .what p { line-height: 1.7; letter-spacing: 0; }
+    .what p + p { margin-top: 24px; font-size: 17px; color: var(--text-2); letter-spacing: -0.01em; }
+    .what p .hl { color: var(--sage-deep); font-weight: 600; }
+
+    /* ============ BENEFITS ============ */
+    .benefits { background: var(--white); }
+    .benefits-head { max-width: 720px; margin-bottom: 64px; }
+    .benefits-head .lead-2 { margin-top: 22px; }
+    .ben-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+    .ben { background: var(--white); padding: 38px 32px; display: flex; flex-direction: column; gap: 14px; min-height: 252px; transition: background 0.4s; }
+    .ben:hover { background: var(--bg); }
+    .ben-ic { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+    .ben-ic svg { width: 22px; height: 22px; }
+    .ben-ic.s1 { background: var(--sage-soft); color: var(--sage-deeper); }
+    .ben-ic.s2 { background: var(--sky-soft); color: var(--sky-deep); }
+    .ben-ic.s3 { background: #F6EAD0; color: var(--amber-deep); }
+    .ben h3 { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .ben p { font-size: 14.5px; color: var(--text-2); line-height: 1.55; }
+    body.lang-ja .ben p { line-height: 1.75; }
+
+    /* ============ FEATURE ROWS ============ */
+    .feature { background: var(--bg); overflow: hidden; }
+    .feature.alt { background: var(--white); }
+    .feature-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .feature-row.flip .feature-text { order: 2; }
+    .feature-text .h2 { margin-bottom: 22px; }
+    .feature-text p { font-size: 17px; color: var(--text-2); line-height: 1.6; max-width: 480px; }
+    body.lang-ja .feature-text p { line-height: 1.8; }
+    .feature-bullets { margin-top: 32px; display: flex; flex-direction: column; gap: 14px; }
+    .feature-bullets li { list-style: none; display: flex; align-items: flex-start; gap: 13px; font-size: 15.5px; color: var(--text); font-weight: 500; }
+    .feature-bullets li .chk { flex-shrink: 0; width: 22px; height: 22px; border-radius: 7px; background: var(--sage-soft); color: var(--sage-deeper); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .feature-bullets li .chk svg { width: 13px; height: 13px; }
+    .feature-visual { position: relative; }
+
+    .mini-window { border-radius: 16px; overflow: hidden; background: var(--ink); box-shadow: 0 30px 70px -20px rgba(30,42,34,0.35); border: 1px solid rgba(30,42,34,0.08); }
+    .mini-window .titlebar { height: 32px; }
+    .mini-window .titlebar .light { width: 9px; height: 9px; }
+    .mini-cap { position: relative; aspect-ratio: 16/11; background: #0E1611; display: flex; align-items: center; justify-content: center; }
+    .mini-cap .scope { width: 70%; aspect-ratio: 4/3; border-radius: 10px; background: radial-gradient(circle at 46% 42%, #F0B589 0%, #C66B3E 26%, #8A3318 52%, #43130A 78%, #1A0703 96%); box-shadow: inset 0 0 60px rgba(0,0,0,0.6); }
+    .mini-cap .rec { top: 12px; left: 12px; }
+    .mini-cap .voice { bottom: 12px; }
+    .color-bar { display: flex; gap: 8px; padding: 14px; background: #1A241D; }
+    .color-bar .cc { flex: 1; }
+    .color-bar .cc .nm { font-size: 9px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+    .color-bar .cc .tr { height: 3px; border-radius: 999px; background: rgba(255,255,255,0.12); position: relative; }
+    .color-bar .cc .tr::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--sky); }
+    .color-bar .cc:nth-child(1) .tr::after { width: 65%; }
+    .color-bar .cc:nth-child(2) .tr::after { width: 48%; }
+    .color-bar .cc:nth-child(3) .tr::after { width: 80%; }
+    .color-bar .cc:nth-child(4) .tr::after { width: 38%; }
+
+    .patient-ui { background: var(--white); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px -24px rgba(30,42,34,0.22); }
+    .patient-ui .search { padding: 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+    .patient-ui .search .box { flex: 1; height: 36px; border-radius: 9px; background: var(--bg); display: flex; align-items: center; gap: 9px; padding: 0 12px; color: var(--text-3); font-size: 13px; }
+    .patient-ui .search .box svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .pat-list { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .pat-item { display: flex; align-items: center; gap: 13px; padding: 12px; border-radius: 11px; transition: background 0.2s; }
+    .pat-item:hover, .pat-item.active { background: var(--sage-soft); }
+    .pat-item .av { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; }
+    .pat-item:nth-child(1) .av { background: var(--sage-deep); }
+    .pat-item:nth-child(2) .av { background: var(--sky-deep); }
+    .pat-item:nth-child(3) .av { background: var(--amber-deep); }
+    .pat-item:nth-child(4) .av { background: var(--sage-deeper); }
+    .pat-item .info { flex: 1; min-width: 0; }
+    .pat-item .info .nm { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .pat-item .info .sub { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .pat-item .studies { font-size: 11px; font-weight: 600; color: var(--sage-deep); background: var(--sage-soft); padding: 4px 9px; border-radius: 7px; white-space: nowrap; }
+    .pat-item.active .studies { background: rgba(255,255,255,0.7); }
+
+    .report-page { background: #fff; border-radius: 14px; box-shadow: 0 30px 70px -20px rgba(30,42,34,0.28); border: 1px solid var(--line); padding: 34px; transform: rotate(-1.2deg); transition: transform 0.5s var(--ease); max-width: 420px; margin: 0 auto; }
+    .feature-visual:hover .report-page { transform: rotate(0deg); }
+    .report-page .rp-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 2px solid var(--sage); }
+    .report-page .rp-logo { display: flex; align-items: center; gap: 9px; }
+    .report-page .rp-logo .m { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(150deg, var(--sage), var(--sage-deep)); flex-shrink: 0; }
+    .report-page .rp-logo .tx { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .report-page .rp-logo .tx small { display: block; font-size: 8px; color: var(--text-3); font-weight: 500; letter-spacing: 0.1em; }
+    .report-page .rp-date { font-size: 10px; color: var(--text-3); text-align: right; }
+    .rp-rows { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+    .rp-rows .r .k { font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); font-weight: 600; }
+    .rp-rows .r .v { font-size: 12px; color: var(--ink); font-weight: 600; margin-top: 2px; }
+    .rp-imgs { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+    .rp-imgs .im { aspect-ratio: 1; border-radius: 7px; background: radial-gradient(circle at 42% 40%, #E8A87C, #9A3A1E 55%, #3A0F06 92%); }
+    .rp-sign { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; align-items: flex-end; justify-content: space-between; }
+    .rp-sign .sig { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; color: var(--sky-deep); }
+    .rp-sign .who { font-size: 9px; color: var(--text-3); }
+    .rp-sign .who b { display: block; font-size: 11px; color: var(--ink); }
+
+    /* ============ SECURITY (dark) ============ */
+    .security { background: var(--ink); color: #fff; overflow: hidden; }
+    .security::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 20% 30%, rgba(157,181,130,0.16), transparent 60%), radial-gradient(ellipse 40% 40% at 85% 70%, rgba(115,175,220,0.12), transparent 60%); pointer-events: none; }
+    .security .feature-row { position: relative; z-index: 2; }
+    .security .feature-text p { color: rgba(255,255,255,0.65); }
+    .security .feature-bullets li { color: rgba(255,255,255,0.9); }
+    .security .feature-bullets li .chk { background: rgba(157,181,130,0.2); color: var(--sage); }
+    .shield-visual { aspect-ratio: 1; max-width: 380px; margin: 0 auto; position: relative; display: flex; align-items: center; justify-content: center; }
+    .shield-visual .ring { position: absolute; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; }
+    .shield-visual .ring.r1 { inset: 0; }
+    .shield-visual .ring.r2 { inset: 16%; }
+    .shield-visual .ring.r3 { inset: 32%; border-color: rgba(157,181,130,0.25); }
+    .shield-core { width: 120px; height: 134px; position: relative; display: flex; align-items: center; justify-content: center; z-index: 2; }
+    .shield-core svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 14px 30px rgba(157,181,130,0.4)); }
+    .shield-core svg.lock { width: 44px; height: 44px; position: relative; z-index: 2; }
+    .orbit-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--sky); box-shadow: 0 0 14px var(--sky); top: 8%; left: 50%; }
+    .orbit-dot.d2 { background: var(--amber); box-shadow: 0 0 14px var(--amber); top: auto; bottom: 14%; left: 22%; }
+    .orbit-dot.d3 { background: var(--sage); box-shadow: 0 0 14px var(--sage); top: 50%; right: 6%; left: auto; }
+
+    /* ============ LANGUAGES ============ */
+    .langs { background: var(--sage-soft); overflow: hidden; }
+    .langs-inner { text-align: center; max-width: 760px; margin: 0 auto; }
+    .langs .lead-2 { margin-top: 22px; color: var(--text-2); }
+    .langs .count { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--sage-deeper); }
+    body.lang-ja .langs .count { font-family: 'Noto Serif JP', serif; font-style: normal; font-weight: 600; }
+    .lang-marquee { margin-top: 56px; -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
+    .lang-track { display: flex; gap: 14px; width: max-content; animation: marquee 36s linear infinite; }
+    .lang-chip { display: inline-flex; align-items: center; gap: 9px; padding: 13px 22px; background: var(--white); border-radius: 14px; font-size: 16px; font-weight: 600; color: var(--ink); white-space: nowrap; box-shadow: 0 4px 14px rgba(30,42,34,0.05); }
+    .lang-chip .fl { font-size: 18px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ============ HOW IT WORKS ============ */
+    .how { background: var(--bg); }
+    .how-head { text-align: center; max-width: 720px; margin: 0 auto 72px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+    .step { background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 38px 32px; position: relative; transition: transform 0.4s var(--ease), box-shadow 0.4s; }
+    .step:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(30,42,34,0.08); }
+    .step .num { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 58px; line-height: 1; color: var(--sage); margin-bottom: 22px; }
+    body.lang-ja .step .num { font-family: 'Noto Serif JP', serif; font-style: normal; }
+    .step h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 10px; }
+    .step p { font-size: 15px; color: var(--text-2); line-height: 1.55; }
+    .step .arr { position: absolute; top: 50px; right: -28px; width: 40px; height: 40px; color: var(--line-2); z-index: 3; display: flex; align-items: center; justify-content: center; }
+    .step:last-child .arr { display: none; }
+
+    /* ============ OPTITRONIC ============ */
+    .opti { background: var(--white); }
+    .opti-trust { max-width: 900px; margin: 0 auto 80px; text-align: center; }
+    .opti-trust .h2 { margin-bottom: 22px; }
+    .opti-trust .lead-2 { max-width: 640px; margin: 0 auto; }
+    .opti-trust .years { display: inline-flex; align-items: baseline; gap: 8px; margin-top: 36px; }
+    .opti-trust .years .big { font-size: 72px; font-weight: 800; letter-spacing: -0.04em; color: var(--sage-deep); line-height: 1; }
+    .opti-trust .years .lbl { font-size: 14px; color: var(--text-2); text-align: left; max-width: 180px; }
+    .opti-services { margin-top: 8px; }
+    .opti-services .ss-head { text-align: center; margin-bottom: 44px; }
+    .opti-services .ss-head .section-tag { justify-content: center; }
+    .opti-services .ss-head h3 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); }
+    .opti-services .ss-head p { font-size: 15px; color: var(--text-2); margin-top: 10px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .svc { padding: 28px 24px; background: var(--bg); border: 1px solid var(--line); border-radius: 18px; transition: transform 0.3s var(--ease), border-color 0.3s; }
+    .svc:hover { transform: translateY(-4px); border-color: var(--sage); }
+    .svc .svc-ic { width: 40px; height: 40px; border-radius: 11px; background: var(--white); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--sage-deep); margin-bottom: 18px; }
+    .svc .svc-ic svg { width: 19px; height: 19px; }
+    .svc h4 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+    .svc p { font-size: 13.5px; color: var(--text-2); line-height: 1.5; }
+    body.lang-ja .svc p { line-height: 1.7; }
+
+    /* ============ TRUST BAND + NEW SECTIONS ============ */
+    .trustband { background: var(--white); }
+    .trustband .opti-trust { margin-bottom: 0; }
+
+    .section-cta { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; background: var(--ink); color: #fff; border: none; border-radius: 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--ease), background 0.3s; }
+    .section-cta:hover { transform: translateY(-2px); background: var(--sage-deeper); }
+    .section-cta svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease); }
+    .section-cta:hover svg { transform: translateX(3px); }
+
+    /* Equipos */
+    .equip-head { max-width: 760px; margin-bottom: 48px; }
+    .equip-head .lead-2 { margin-top: 20px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(212px, 1fr)); gap: 18px; }
+    .cat { padding: 28px 24px; background: var(--white); border: 1px solid var(--line); border-radius: 18px; transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s; }
+    .cat:hover { transform: translateY(-4px); border-color: var(--sage); box-shadow: 0 18px 40px rgba(30,42,34,0.07); }
+    .cat .cat-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--sage-soft); color: var(--sage-deeper); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .cat .cat-ic svg { width: 21px; height: 21px; }
+    .cat:nth-child(2) .cat-ic { background: var(--sky-soft); color: var(--sky-deep); }
+    .cat:nth-child(3) .cat-ic { background: #F6EAD0; color: var(--amber-deep); }
+    .cat:nth-child(4) .cat-ic { background: var(--sky-soft); color: var(--sky-deep); }
+    .cat h4 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .cat p { font-size: 13.5px; color: var(--text-2); line-height: 1.5; }
+    .equip-foot { margin-top: 36px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .equip-foot .note { font-size: 15px; color: var(--text-2); max-width: 420px; }
+
+    /* Soporte / repair card */
+    .repair-card { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 30px 32px; box-shadow: 0 30px 70px -28px rgba(30,42,34,0.2); }
+    .repair-card h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-3); font-weight: 700; margin-bottom: 16px; }
+    .repair-list { display: flex; flex-direction: column; }
+    .repair-list .ri { display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--line); font-size: 16px; font-weight: 600; color: var(--ink); }
+    .repair-list .ri:last-child { border-bottom: none; }
+    .repair-list .ri .d { width: 34px; height: 34px; border-radius: 9px; background: var(--sky-soft); color: var(--sky-deep); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .repair-list .ri .d svg { width: 17px; height: 17px; }
+
+    /* Desarrollo */
+    .dev-head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+    .dev-head .lead-2 { margin-top: 20px; }
+    .dev-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .dev-card { position: relative; padding: 34px; background: var(--white); border: 1px solid var(--line); border-radius: 22px; display: flex; flex-direction: column; transition: transform 0.4s var(--ease), box-shadow 0.4s; overflow: hidden; }
+    .dev-card:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(30,42,34,0.08); }
+    .dev-card .dev-ic { width: 48px; height: 48px; border-radius: 13px; background: var(--sage-soft); border: none; display: flex; align-items: center; justify-content: center; color: var(--sage-deeper); margin-bottom: 20px; }
+    .dev-card .dev-ic svg { width: 23px; height: 23px; }
+    .dev-card .kicker { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-deep); margin-bottom: 10px; }
+    .dev-card h4 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 10px; line-height: 1.15; }
+    .dev-card p { font-size: 14.5px; color: var(--text-2); line-height: 1.55; margin-bottom: 22px; }
+    body.lang-ja .dev-card p { line-height: 1.75; }
+    .dev-card .dev-link { margin-top: auto; display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--sage-deeper); text-decoration: none; }
+    .dev-card .dev-link svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease); }
+    .dev-card .dev-link:hover svg { transform: translateX(3px); }
+    .dev-card.feature-card { background: linear-gradient(160deg, var(--ink) 0%, #2b3a30 100%); border-color: var(--ink); }
+    .dev-card.feature-card .kicker { color: var(--sage); }
+    .dev-card.feature-card h4 { color: #fff; }
+    .dev-card.feature-card p { color: rgba(255,255,255,0.66); }
+    .dev-card.feature-card .dev-ic { background: rgba(157,181,130,0.18); color: var(--sage); }
+    .dev-card.feature-card .dev-link { color: var(--sage); }
+    .dev-card.feature-card::before { content: ''; position: absolute; width: 340px; height: 340px; right: -110px; bottom: -150px; background: radial-gradient(circle, rgba(157,181,130,0.4), transparent 70%); filter: blur(46px); pointer-events: none; }
+    .dev-card.feature-card > * { position: relative; z-index: 2; }
+
+    /* contact address */
+    .contact-addr { margin-top: 6px; font-size: 13px; color: rgba(255,255,255,0.42); max-width: 560px; text-align: center; line-height: 1.55; }
+
+    /* ============ CTA ============ */
+    .cta { background: var(--ink); color: #fff; overflow: hidden; text-align: center; }
+    .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 110%, rgba(157,181,130,0.3), transparent 60%), radial-gradient(ellipse 40% 40% at 20% 0%, rgba(115,175,220,0.14), transparent 60%); pointer-events: none; }
+    .cta-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 28px; max-width: 820px; margin: 0 auto; }
+    .cta h2 { font-size: clamp(40px, 6.2vw, 84px); font-weight: 700; line-height: 0.98; letter-spacing: -0.04em; }
+    body.lang-ja .cta h2 { letter-spacing: -0.01em; line-height: 1.25; }
+    .cta h2 .serif { color: var(--sage); }
+    .cta p { font-size: 18px; color: rgba(255,255,255,0.6); max-width: 540px; line-height: 1.5; }
+    .cta-form { margin-top: 18px; width: 100%; max-width: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left; }
+    .cta-form .field { display: flex; flex-direction: column; gap: 7px; }
+    .cta-form .field.full { grid-column: span 2; }
+    .cta-form label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .cta-form input, .cta-form select { min-width: 0; padding: 14px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; font: inherit; font-size: 14px; color: #fff; transition: border-color 0.2s, background 0.2s; }
+    .cta-form input::placeholder { color: rgba(255,255,255,0.32); }
+    .cta-form input:focus, .cta-form select:focus { outline: none; border-color: var(--sage); background: rgba(255,255,255,0.1); }
+    .cta-form select { appearance: none; cursor: pointer; }
+    .cta-form select option { color: #1E2A22; }
+    .cta-form .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }
+    .cta-form .submit[disabled] { opacity: 0.55; cursor: not-allowed; }
+    .cta-form .form-msg { grid-column: 1 / -1; font-size: 13px; text-align: center; min-height: 18px; color: rgba(255,255,255,0.65); }
+    .cta-form .form-msg.ok { font-size: 15px; font-weight: 600; color: #DFF0C8; background: rgba(157,181,130,0.18); border: 1px solid rgba(157,181,130,0.45); border-radius: 12px; padding: 14px 18px; }
+    .cta-form .form-msg.err { font-size: 14px; font-weight: 600; color: #F3C4A0; background: rgba(232,168,124,0.12); border: 1px solid rgba(232,168,124,0.35); border-radius: 12px; padding: 12px 16px; }
+    .cta-form .submit { grid-column: span 2; padding: 16px; background: var(--sage); color: var(--ink); border: none; border-radius: 13px; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 9px; transition: transform 0.3s var(--ease), background 0.3s; }
+    .cta-form .submit:hover { transform: translateY(-2px); background: #fff; }
+    .contact-row { margin-top: 10px; display: flex; gap: 28px; flex-wrap: wrap; justify-content: center; font-size: 13.5px; }
+    .contact-row a { color: rgba(255,255,255,0.72); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s; }
+    .contact-row a:hover { color: var(--sage); }
+    .contact-row a svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ============ FOOTER ============ */
+    .footer { background: var(--ink); color: rgba(255,255,255,0.5); padding: 72px 0 30px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .footer-grid { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
+    .footer-brand { max-width: 320px; }
+    .footer-brand .logo { margin-bottom: 16px; }
+    .footer-brand .logo-text { color: #fff; }
+    .footer-brand p { font-size: 14px; line-height: 1.55; }
+    .footer h5 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; font-weight: 700; margin-bottom: 18px; }
+    .footer ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .footer a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer a:hover { color: var(--sage); }
+    .footer-bottom { padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; gap: 16px; font-size: 12px; flex-wrap: wrap; }
+    .footer-bottom .made { display: inline-flex; align-items: center; gap: 8px; }
+    .footer-bottom .made::before { content: ''; width: 15px; height: 10px; background: linear-gradient(to bottom, #fcd116 33%, #00247d 33% 66%, #cf142b 66%); border-radius: 1px; }
+
+    /* ============ REVEAL ============ */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal.d1 { transition-delay: 0.07s; }
+    .reveal.d2 { transition-delay: 0.14s; }
+    .reveal.d3 { transition-delay: 0.21s; }
+    .reveal.d4 { transition-delay: 0.28s; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1024px) {
+      .nav { display: none; }
+      .menu-toggle { display: block; }
+      .btn-pill { display: none; }
+      .app-body { grid-template-columns: 1fr; min-height: 0; }
+      .rail, .controls { display: none; }
+      .canvas { min-height: 360px; }
+      .ben-grid { grid-template-columns: repeat(2, 1fr); }
+      .feature-row { grid-template-columns: 1fr; gap: 48px; }
+      .feature-row.flip .feature-text { order: 0; }
+      .svc-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      .header { padding: 12px; }
+      .header-inner { padding: 0 8px 0 14px; gap: 8px; }
+      .logo-text small { display: none; }
+      .lang-switch button { padding: 5px 7px; font-size: 11px; }
+      .hero { padding: 130px 22px 56px; }
+      .hero h1 { font-size: 42px; }
+      .pad { padding: 76px 0; }
+      .wrap { padding: 0 20px; }
+      .ben-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .step .arr { display: none !important; }
+      .svc-grid { grid-template-columns: 1fr; }
+      .dev-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .cta-form { grid-template-columns: 1fr; }
+      .cta-form .field.full, .cta-form .submit { grid-column: span 1; }
+      .opti-trust .years .big { font-size: 56px; }
+      .hero-app { margin-top: 44px; }
+    }
+  
+    /* ============ CAPABILITIES (company overview) ============ */
+    .caps { background: var(--white); }
+    .caps-head { max-width: 820px; margin: 0 auto 60px; text-align: center; }
+    .caps-head .section-tag { justify-content: center; }
+    .caps-head .lead-2 { margin-top: 22px; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .caps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .cap { position: relative; overflow: hidden; padding: 38px; background: var(--bg); border: 1px solid var(--line); border-radius: 22px; display: flex; flex-direction: column; min-height: 264px; text-decoration: none; transition: transform 0.4s var(--ease), box-shadow 0.4s, border-color 0.3s; }
+    .cap:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(30,42,34,0.08); border-color: var(--sage); }
+    .cap .cap-idx { position: absolute; top: 34px; right: 38px; font-family: 'Instrument Serif', serif; font-style: italic; font-size: 30px; color: var(--line-2); line-height: 1; }
+    .cap .cap-ic { width: 54px; height: 54px; border-radius: 15px; background: var(--sage-soft); color: var(--sage-deeper); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .cap:nth-child(2) .cap-ic { background: var(--sky-soft); color: var(--sky-deep); }
+    .cap:nth-child(3) .cap-ic { background: #F6EAD0; color: var(--amber-deep); }
+    .cap:nth-child(4) .cap-ic { background: var(--sage-soft); color: var(--sage-deeper); }
+    .cap .cap-ic svg { width: 26px; height: 26px; }
+    .cap .cap-kick { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sage-deep); margin-bottom: 8px; }
+    .cap h3 { font-size: 25px; font-weight: 700; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 10px; line-height: 1.1; }
+    .cap p { font-size: 15px; color: var(--text-2); line-height: 1.55; max-width: 430px; }
+    .cap .cap-link { margin-top: auto; padding-top: 24px; display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--sage-deeper); }
+    .cap .cap-link svg { width: 15px; height: 15px; transition: transform 0.3s var(--ease); }
+    .cap:hover .cap-link svg { transform: translateX(4px); }
+
+    /* ============ MEDIFRAME FLAGSHIP SPOTLIGHT ============ */
+    .mf-spot { background: var(--ink); color: #fff; overflow: hidden; }
+    .mf-spot::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 45% at 50% 0%, rgba(157,181,130,0.18), transparent 60%), radial-gradient(ellipse 40% 40% at 85% 80%, rgba(115,175,220,0.12), transparent 60%); pointer-events: none; }
+    .mf-spot .wrap { position: relative; z-index: 2; }
+    .mf-head { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 22px; }
+    .mf-wordmark { display: inline-flex; align-items: center; }
+    .mf-wordmark img { width: 540px; max-width: 80vw; height: auto; display: block; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.3)); }
+    .mf-spot .section-tag { color: var(--sage); justify-content: center; margin-bottom: 0; }
+    .mf-spot .section-tag::before { background: var(--sage); }
+    .mf-spot h2 { font-size: clamp(38px, 5.5vw, 74px); font-weight: 700; line-height: 1; letter-spacing: -0.038em; color: #fff; max-width: 900px; }
+    .mf-spot h2 .serif { color: var(--sage); }
+    body.lang-ja .mf-spot h2 { letter-spacing: -0.01em; line-height: 1.2; }
+    .mf-spot .sub { font-size: 19px; color: rgba(255,255,255,0.66); max-width: 620px; line-height: 1.5; }
+    .mf-app { margin: 56px auto 0; max-width: 1080px; width: 100%; perspective: 2000px; }
+    .mf-screenshot { display: block; width: 100%; height: auto; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 50px 100px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(30,42,34,0.05); }
+    .mf-feats { margin: 62px auto 0; max-width: 1080px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: left; }
+    .mf-feat .fic { width: 44px; height: 44px; border-radius: 12px; background: rgba(157,181,130,0.16); color: var(--sage); display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+    .mf-feat .fic svg { width: 21px; height: 21px; }
+    .mf-feat h4 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .mf-feat p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.55; }
+    .mf-cta { margin: 54px auto 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .mf-cta .btn-primary { background: var(--sage); color: var(--ink); box-shadow: 0 10px 30px rgba(157,181,130,0.28); }
+    .mf-cta .btn-primary:hover { background: #fff; }
+    .mf-cta .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.24); }
+    .mf-cta .btn-secondary:hover { border-color: var(--sage); }
+
+    @media (max-width: 1024px) {
+      .mf-feats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .caps-grid { grid-template-columns: 1fr; }
+      .mf-feats { grid-template-columns: 1fr; }
+      .cap { min-height: 0; padding: 30px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="#top" class="logo">
+        <img class="logo-mark" src="assets/Optritronic-v2.jpeg" alt="Optitronic C.A.">
+        <span class="logo-text">Optitronic<small>Tecnología médica · C.A.</small></span>
+      </a>
+      <nav class="nav">
+        <a href="#empresa">Empresa</a>
+        <a href="#mediframe">MediFrame</a>
+        <a href="#equipos">Equipos</a>
+        <a href="#soporte">Soporte</a>
+        <a href="#desarrollo">Desarrollo</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="header-cta">
+        <a href="#contacto" class="btn-pill">Solicitar información</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menú"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#empresa">Empresa</a>
+    <a href="#mediframe">MediFrame</a>
+    <a href="#equipos">Equipos</a>
+    <a href="#soporte">Soporte</a>
+    <a href="#desarrollo">Desarrollo</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+
+  <!-- HERO (company) -->
+  <section class="hero" id="top" data-screen-label="01 Hero empresa">
+    <div class="hero-bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-inner">
+      <img class="hero-logo reveal" src="assets/Optitronic.png" alt="Optitronic C.A.">
+      <div class="eyebrow reveal"><span class="badge" style="white-space:nowrap;">20+ años</span> Optitronic C.A. · Imagenología médica</div>
+      <h1 class="reveal d1">Tecnología médica de imagenología, <span class="serif">de principio a fin.</span></h1>
+      <p class="lead reveal d2">Software clínico, venta de equipos, soporte técnico especializado y desarrollo de soluciones propias. Más de 20 años acompañando al especialista médico.</p>
+      <div class="hero-ctas reveal d3">
+        <a href="#contacto" class="btn-primary">Solicitar información <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a href="#mediframe" class="btn-secondary">Conocer MediFrame</a>
+      </div>
+      <div class="trust-line reveal d4">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> 20+ años de experiencia</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Software propio: MediFrame</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Soporte técnico local</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Desarrollo en Venezuela</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES / EMPRESA -->
+  <section class="caps pad" id="empresa" data-screen-label="02 Qué hacemos">
+    <div class="wrap">
+      <div class="caps-head">
+        <div class="section-tag reveal">Un solo aliado</div>
+        <h2 class="h2 reveal d1">Cuatro áreas, <span class="serif">una misma casa.</span></h2>
+        <p class="lead-2 reveal d2">Optitronic reúne bajo un mismo techo todo lo que el especialista en imagenología necesita: el software con el que trabaja, los equipos que usa, el servicio que los mantiene y el desarrollo que los hace mejores.</p>
+      </div>
+      <div class="caps-grid">
+        <a href="#mediframe" class="cap reveal">
+          <span class="cap-idx">01</span>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+          <div class="cap-kick">Software clínico</div>
+          <h3>MediFrame</h3>
+          <p>Nuestra aplicación insignia: captura, organiza y documenta procedimientos de imagenología, y genera reportes profesionales en PDF.</p>
+          <span class="cap-link">Conocer MediFrame <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </a>
+        <a href="#equipos" class="cap reveal d1">
+          <span class="cap-idx">02</span>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+          <div class="cap-kick">Venta de equipos</div>
+          <h3>Equipos y accesorios</h3>
+          <p>Endoscopios, microscopios, colposcopios y equipos de imagenología en general, con el respaldo técnico de Optitronic.</p>
+          <span class="cap-link">Ver equipos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </a>
+        <a href="#soporte" class="cap reveal d2">
+          <span class="cap-idx">03</span>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="cap-kick">Soporte técnico</div>
+          <h3>Reparación y mantenimiento</h3>
+          <p>Servicio técnico experto en equipos médicos de imagenología: diagnóstico preciso y reparaciones confiables.</p>
+          <span class="cap-link">Solicitar servicio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </a>
+        <a href="#desarrollo" class="cap reveal d3">
+          <span class="cap-idx">04</span>
+          <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/></svg></div>
+          <div class="cap-kick">Desarrollo propio</div>
+          <h3>Formación y dispositivos</h3>
+          <p>Creamos: formación especializada y dispositivos propios como SIRE y las agujas de endoscopia de diseño Optitronic.</p>
+          <span class="cap-link">Ver desarrollo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAND -->
+  <section class="trustband pad" data-screen-label="03 Trayectoria">
+    <div class="wrap">
+      <div class="opti-trust">
+        <div class="section-tag reveal" style="justify-content:center;">Nuestra trayectoria</div>
+        <h2 class="h2 reveal d1">Un aliado, <span class="serif">no solo un proveedor.</span></h2>
+        <p class="lead-2 reveal d2">Acompañamos al especialista médico con software, equipos, soporte y desarrollo propio. Un mismo interlocutor para todo el ciclo de vida de tu equipamiento de imagenología.</p>
+        <div class="years reveal d3">
+          <span class="big">20+</span>
+          <span class="lbl">años acompañando al especialista médico</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDIFRAME FLAGSHIP SPOTLIGHT -->
+  <section class="mf-spot pad dark" id="mediframe" data-screen-label="04 MediFrame">
+    <div class="wrap">
+      <div class="mf-head">
+        <div class="mf-wordmark reveal"><img src="assets/Mediframe.png" alt="MediFrame — By Optitronic C.A."></div>
+        <div class="section-tag reveal d1">Software insignia · macOS</div>
+        <h2 class="reveal d1">De la cámara al reporte médico, <span class="serif">en una sola app.</span></h2>
+        <p class="sub reveal d2">MediFrame captura, organiza y documenta tus procedimientos de imagenología en tiempo real — y genera reportes profesionales en PDF listos para entregar al paciente.</p>
+      </div>
+
+      <div class="mf-app reveal d2">
+        <img class="mf-screenshot" src="assets/estudio.png" alt="MediFrame — Detalles del paciente con galería del estudio y módulo capturador">
+      </div>
+
+      <div class="mf-feats reveal d2">
+        <div class="mf-feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3"/></svg></div><h4>De la cámara al reporte</h4><p>Captura foto y video desde tu equipo y genera el PDF en el mismo flujo, sin software extra.</p></div>
+        <div class="mf-feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg></div><h4>Manos libres</h4><p>Dispara por comando de voz, teclado o control físico, sin soltar el instrumental.</p></div>
+        <div class="mf-feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div><h4>Privacidad por diseño</h4><p>Datos cifrados y almacenamiento local. Funciona sin depender de internet.</p></div>
+        <div class="mf-feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h4>13 idiomas</h4><p>Interfaz y reportes disponibles en 13 idiomas para atender a cualquier paciente.</p></div>
+      </div>
+
+      <div class="mf-cta reveal d3">
+        <a href="#contacto" class="btn-primary">Solicitar demo de MediFrame <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a href="index.html" class="btn-secondary">Ver el sitio de MediFrame</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPOS -->
+  <section class="feature alt pad" id="equipos" data-screen-label="05 Equipos">
+    <div class="wrap">
+      <div class="equip-head">
+        <div class="section-tag reveal">Venta de equipos</div>
+        <h2 class="h2 reveal d1">Equipos de imagenología médica, <span class="serif">listos para tu consulta.</span></h2>
+        <p class="lead-2 reveal d2">Ponemos a tu alcance equipos de imagenología médica y sus accesorios, seleccionados para responder a las necesidades reales del especialista. Cada equipo cuenta con el respaldo de nuestro servicio técnico y años de experiencia en el sector.</p>
+      </div>
+      <div class="cat-grid">
+        <div class="cat reveal">
+          <div class="cat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20c7 0 7-9 14-9"/><circle cx="18" cy="9" r="2"/><path d="M4 20v-5"/></svg></div>
+          <h4>Endoscopios</h4>
+          <p>Equipos para procedimientos endoscópicos.</p>
+        </div>
+        <div class="cat reveal d1">
+          <div class="cat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 3v3"/><path d="M11 3v3"/><path d="M8 6h5"/></svg></div>
+          <h4>Microscopios</h4>
+          <p>Para diagnóstico y procedimientos de precisión.</p>
+        </div>
+        <div class="cat reveal d2">
+          <div class="cat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h4>Colposcopios</h4>
+          <p>Para exploración y diagnóstico ginecológico.</p>
+        </div>
+        <div class="cat reveal d3">
+          <div class="cat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg></div>
+          <h4>Imagenología en general</h4>
+          <p>Soluciones para distintas especialidades.</p>
+        </div>
+        <div class="cat reveal d4">
+          <div class="cat-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
+          <h4>Accesorios</h4>
+          <p>Complementos y consumibles para tus equipos.</p>
+        </div>
+      </div>
+      <div class="equip-foot reveal">
+        <span class="note">¿Buscas un equipo específico? Cuéntanos qué necesitas y te asesoramos.</span>
+        <a href="#contacto" class="section-cta">Solicitar cotización <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOPORTE -->
+  <section class="feature pad" id="soporte" data-screen-label="06 Soporte">
+    <div class="wrap">
+      <div class="feature-row">
+        <div class="feature-text reveal">
+          <div class="section-tag">Soporte técnico y reparación</div>
+          <h2 class="h2">Reparación especializada <span class="serif">de equipos médicos.</span></h2>
+          <p>Nuestro equipo técnico repara y da mantenimiento a equipos médicos de imagenología con más de 20 años de experiencia en el sector. Diagnóstico preciso, reparaciones confiables y el compromiso de devolver tu equipo a su máximo rendimiento.</p>
+          <ul class="feature-bullets">
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span> Diagnóstico especializado</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span> Reparación con estándares profesionales</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span> Experiencia comprobada en imagenología</li>
+            <li><span class="chk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span> Respaldo y asesoría técnica continua</li>
+          </ul>
+          <a href="#contacto" class="section-cta" style="margin-top:32px;">Agendar una revisión <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="feature-visual reveal d2">
+          <div class="repair-card">
+            <h4>Equipos que reparamos</h4>
+            <div class="repair-list">
+              <div class="ri"><span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Endoscopios</div>
+              <div class="ri"><span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Duodenoscopios</div>
+              <div class="ri"><span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Ultrasonido y ultrasonido general</div>
+              <div class="ri"><span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Microscopios</div>
+              <div class="ri"><span class="d"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Colposcopios</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESARROLLO -->
+  <section class="feature alt pad" id="desarrollo" data-screen-label="07 Desarrollo">
+    <div class="wrap">
+      <div class="dev-head">
+        <div class="section-tag reveal" style="justify-content:center;">Desarrollo de productos propios</div>
+        <h2 class="h2 reveal d1">Soluciones <span class="serif">desarrolladas por Optitronic.</span></h2>
+        <p class="lead-2 reveal d2">Además de comercializar y reparar, creamos formación especializada y dispositivos propios para el cuidado y manejo del instrumental endoscópico.</p>
+      </div>
+      <div class="dev-grid">
+        <div class="dev-card reveal">
+          <div class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div>
+          <div class="kicker">Formación</div>
+          <h4>Curso de reprocesamiento</h4>
+          <p>Capacitación especializada en el reprocesamiento correcto del instrumental endoscópico, para garantizar seguridad, higiene y cumplimiento de los estándares.</p>
+          <a href="#contacto" class="dev-link">Más información del curso <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="dev-card reveal d1">
+          <div class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+          <div class="kicker">Formación</div>
+          <h4>Mantenimiento básico de endoscopios</h4>
+          <p>Un curso práctico para que tu equipo aprenda a realizar el mantenimiento básico del endoscopio, prolongando su vida útil y reduciendo fallas.</p>
+          <a href="#contacto" class="dev-link">Más información del curso <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="dev-card feature-card reveal d2">
+          <div class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><circle cx="12" cy="14" r="3"/></svg></div>
+          <div class="kicker">Dispositivo propio</div>
+          <h4>SIRE — desinfección y lavado</h4>
+          <p>SIRE es nuestro dispositivo para la desinfección y el lavado de endoscopios, pensado para hacer el reprocesamiento más seguro, consistente y eficiente.</p>
+          <a href="#contacto" class="dev-link">Conocer SIRE <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+        <div class="dev-card reveal d3">
+          <div class="dev-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 3-3"/><path d="M8.5 15.5 15 9"/><path d="m14 6 4-4 4 4-6 6"/><path d="m17 9-3-3"/></svg></div>
+          <div class="kicker">Diseño propio</div>
+          <h4>Agujas de endoscopia</h4>
+          <p>Desarrollamos agujas de endoscopia diseñadas para responder a las necesidades del procedimiento con precisión y confiabilidad.</p>
+          <a href="#contacto" class="dev-link">Solicitar información <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / CONTACTO -->
+  <section class="cta pad dark" id="contacto" data-screen-label="08 Contacto">
+    <div class="wrap">
+      <div class="cta-inner">
+        <div class="section-tag reveal" style="justify-content:center;color:var(--sage);">Contacto</div>
+        <h2 class="reveal d1">Hablemos de <span class="serif">tu institución.</span></h2>
+        <p class="reveal d2">Déjanos tus datos y un experto de Optitronic te contactará para orientarte en software, equipos, soporte o desarrollo.</p>
+        <form class="cta-form reveal d3" id="contactForm" novalidate>
+          <div class="field"><label for="cf-nombre">Nombre</label><input id="cf-nombre" name="nombre" type="text" placeholder="Tu nombre completo" required maxlength="120" autocomplete="name"></div>
+          <div class="field"><label for="cf-cargo">Especialidad / Cargo</label><input id="cf-cargo" name="cargo" type="text" placeholder="Médico, biomédico, gerente…" required maxlength="120" autocomplete="organization-title"></div>
+          <div class="field full"><label for="cf-institucion">Institución</label><input id="cf-institucion" name="institucion" type="text" placeholder="Hospital, clínica o centro médico" required maxlength="160" autocomplete="organization"></div>
+          <div class="field"><label for="cf-correo">Correo</label><input id="cf-correo" name="correo" type="email" placeholder="tu@correo.com" required maxlength="160" autocomplete="email"></div>
+          <div class="field"><label for="cf-telefono">Teléfono</label><input id="cf-telefono" name="telefono" type="tel" placeholder="0414 000 0000" required maxlength="30" autocomplete="tel" pattern="[0-9+\(\)\-\s\.]{7,30}"></div>
+          <div class="field full"><label for="cf-interes">¿Qué te interesa?</label>
+            <select id="cf-interes" name="interes">
+              <option>Demo de MediFrame</option>
+              <option>Cotización de equipos de imagenología</option>
+              <option>Soporte técnico / reparación</option>
+              <option>Cursos y desarrollo (SIRE, agujas)</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <!-- Honeypot anti-bots: invisible para humanos; si llega con valor, se descarta el envío -->
+          <div class="hp-field" aria-hidden="true"><label for="cf-web">Sitio web</label><input id="cf-web" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <button type="submit" class="submit">Enviar solicitud <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+          <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+        </form>
+        <div class="contact-row reveal d4">
+          <a href="https://wa.me/584141323286"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.075-.3-.15-1.263-.465-2.403-1.485-.888-.795-1.484-1.77-1.66-2.07-.174-.3-.019-.465.13-.615.136-.135.301-.345.451-.523.146-.181.194-.301.297-.496.1-.21.049-.375-.025-.524-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.3-1.045 1.02-1.045 2.475s1.07 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.091 1.767-.721 2.016-1.426.255-.705.255-1.29.18-1.425-.074-.135-.27-.21-.57-.345m-5.446 7.443h-.016a9.870 9.870 0 0 1-5.031-1.378l-.361-.214-3.741.98.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884a9.825 9.825 0 0 1 6.988 2.895 9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg> 0414-1323286</a>
+          <a href="tel:+584242775921"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> 0424-2775921</a>
+          <a href="/cdn-cgi/l/email-protection#d3beb6b7bab5a1b2beb693bca3a7baa7a1bcbdbab0fdbdb6a7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg> <span class="__cf_email__" data-cfemail="5a373f3e333c283b373f1a352a2e332e283534333974343f2e">[email&#160;protected]</span></a>
+          <a href="https://instagram.com/optitronic.ve"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> @optitronic.ve</a>
+        </div>
+        <p class="contact-addr reveal d4">Av. Los Manguitos, Edif. Sierraalta, PB, Local B, Urb. Las Delicias, Sabana Grande, Municipio Libertador, Caracas, Distrito Capital, CP 1050, Venezuela.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#top" class="logo"><img class="logo-mark" src="assets/Optritronic-v2.jpeg" alt="Optitronic C.A."><span class="logo-text">Optitronic<small>Tecnología médica · C.A.</small></span></a>
+          <p>Tecnología médica de imagenología, de principio a fin. Software clínico, equipos, soporte técnico y desarrollo propio desde Caracas.</p>
+        </div>
+        <div>
+          <h5>Empresa</h5>
+          <ul>
+            <li><a href="#empresa">Qué hacemos</a></li>
+            <li><a href="#mediframe">MediFrame</a></li>
+            <li><a href="#equipos">Equipos</a></li>
+            <li><a href="#soporte">Soporte técnico</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Soluciones</h5>
+          <ul>
+            <li><a href="#desarrollo">Desarrollo propio</a></li>
+            <li><a href="#desarrollo">SIRE</a></li>
+            <li><a href="#desarrollo">Cursos</a></li>
+            <li><a href="index.html">Sitio de MediFrame</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Contacto</h5>
+          <ul>
+            <li><a href="https://wa.me/584141323286">WhatsApp · 0414-1323286</a></li>
+            <li><a href="tel:+584242775921">Tel · 0424-2775921</a></li>
+            <li><a href="/cdn-cgi/l/email-protection#c0ada5a4a9a6b2a1ada580afb0b4a9b4b2afaea9a3eeaea5b4"><span class="__cf_email__" data-cfemail="ef828a8b86899d8e828aaf809f9b869b9d8081868cc1818a9b">[email&#160;protected]</span></a></li>
+            <li><a href="https://instagram.com/optitronic.ve">@optitronic.ve</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Optitronic C.A. Todos los derechos reservados.</p>
+        <p class="made">Hecho en Venezuela</p>
+      </div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Header dark mode over dark sections
+    const header = document.getElementById('header');
+    function updateHeaderTheme() {
+      const r = header.getBoundingClientRect();
+      const el = document.elementFromPoint(window.innerWidth / 2, r.bottom + 4);
+      if (!el) return;
+      const sec = el.closest('section, footer');
+      header.classList.toggle('dark', !!(sec && sec.classList.contains('dark')));
+    }
+    window.addEventListener('scroll', updateHeaderTheme, { passive: true });
+    window.addEventListener('resize', updateHeaderTheme);
+    setTimeout(updateHeaderTheme, 100);
+
+    // Mobile menu
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+      document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+    });
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      menuToggle.classList.remove('open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    }));
+
+    // Reveal
+    const ro = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    requestAnimationFrame(() => document.querySelectorAll('.reveal').forEach(el => ro.observe(el)));
+    // Failsafe: never leave content hidden if IntersectionObserver doesn't fire
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.in)').forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight) el.classList.add('in');
+      });
+    }, 500);
+
+    // ============ FORMULARIO DE CONTACTO ============
+    // Integración con la API de Optitronic: POST firmado con HMAC-SHA256.
+    // HMAC_SECRET se entrega por canal seguro — mientras esté vacío, el formulario
+    // funciona en modo simulado (no sale ninguna petición real).
+    // OJO: el endpoint solo acepta CORS desde https://optitronic.net y https://www.optitronic.net.
+    const API_BASE_URL = 'https://api.optitronic.net';
+    const CONTACT_PATH = '/api/landing/contact';
+    const HMAC_SECRET = '6574d8bfdf925a5b4f3a3e593dbfb3579c4cfdefadc683c9473731a1adfb8ff3'; // secret exclusivo de la landing (no publicar en repos públicos)
+    const APP_ID = 'mediframe-landing-v1';
+
+    const REQUEST_TIMEOUT_MS = 10000;   // aborta la petición si el servidor no responde en 10s
+    const COOLDOWN_MS = 30000;          // espera mínima entre envíos
+    const MAX_PER_WINDOW = 4;           // margen por debajo del límite del servidor (5 por IP / 15 min)
+    const WINDOW_MS = 15 * 60 * 1000;   // misma ventana que el rate limit del backend
+
+    // Firma HMAC-SHA256 con Web Crypto API (nativa; requiere HTTPS o localhost)
+    async function hmacSha256Hex(secret, message) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+      const signature = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+      return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // El backend elimina < > y recorta espacios ANTES de validar la firma:
+    // hay que enviar los valores ya limpios o la firma no coincidirá.
+    function cleanValue(value) {
+      return (value || '').replace(/[<>]/g, '').trim();
+    }
+
+    const contactForm = document.getElementById('contactForm');
+    const formMsg = document.getElementById('formMsg');
+    let inFlight = false;
+    let lastSentAt = 0;
+    let sentTimestamps = [];
+
+    function setMsg(text, kind) {
+      formMsg.textContent = text;
+      formMsg.className = 'form-msg' + (kind ? ' ' + kind : '');
+    }
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // 1) Nunca más de una petición en vuelo a la vez
+      if (inFlight) return;
+
+      // 2) Validación nativa del navegador (required, email, pattern…)
+      if (!contactForm.reportValidity()) return;
+
+      // 3) Honeypot: si un bot rellenó el campo oculto, fingimos éxito y no enviamos nada
+      if (contactForm.website.value !== '') {
+        setMsg('¡Gracias! Te contactaremos pronto.', 'ok');
+        contactForm.reset();
+        return;
+      }
+
+      // 4) Cooldown y límite por ventana de tiempo (anti-spam / anti-saturación)
+      const now = Date.now();
+      if (now - lastSentAt < COOLDOWN_MS) {
+        setMsg('Ya recibimos tu solicitud. Espera unos segundos antes de reenviar.', 'err');
+        return;
+      }
+      sentTimestamps = sentTimestamps.filter(t => now - t < WINDOW_MS);
+      if (sentTimestamps.length >= MAX_PER_WINDOW) {
+        setMsg('Has alcanzado el límite de envíos. Intenta de nuevo más tarde o escríbenos por WhatsApp.', 'err');
+        return;
+      }
+
+      // 5) Body en el formato de la API, limpio ANTES de firmar.
+      //    Se firma y se envía exactamente este mismo string.
+      const body = JSON.stringify({
+        name: cleanValue(contactForm.nombre.value).slice(0, 200).trim(),
+        specialty: cleanValue(contactForm.cargo.value).slice(0, 200).trim(),
+        institution: cleanValue(contactForm.institucion.value).slice(0, 200).trim(),
+        email: cleanValue(contactForm.correo.value).slice(0, 200).trim(),
+        phone: cleanValue(contactForm.telefono.value).slice(0, 50).trim(),
+        interest: cleanValue(contactForm.interes.value).slice(0, 1000).trim()
+      });
+
+      const btn = contactForm.querySelector('.submit');
+      const original = btn.innerHTML;
+      inFlight = true;
+      btn.disabled = true;
+      btn.innerHTML = 'Enviando…';
+      setMsg('');
+
+      try {
+        if (HMAC_SECRET) {
+          const timestamp = Math.floor(Date.now() / 1000).toString();
+          const signature = await hmacSha256Hex(HMAC_SECRET, 'POST:' + CONTACT_PATH + ':' + timestamp + ':' + body);
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+          const res = await fetch(API_BASE_URL + CONTACT_PATH, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Timestamp': timestamp,
+              'X-Signature': signature,
+              'X-App-ID': APP_ID
+            },
+            body,
+            signal: controller.signal,
+            credentials: 'omit'      // sin cookies: menos superficie para CSRF
+          });
+          clearTimeout(timer);
+          if (!res.ok) {
+            let detail = '';
+            try {
+              const data = await res.json();
+              if (res.status === 400 && data && data.error && data.error.details && data.error.details.length) {
+                detail = data.error.details[0].message;
+              }
+            } catch (_) { /* respuesta sin JSON */ }
+            const httpErr = new Error(detail);
+            httpErr.status = res.status;
+            throw httpErr;
+          }
+        } else {
+          // Modo simulado mientras no llegue el HMAC_SECRET
+          await new Promise(r => setTimeout(r, 900));
+          console.info('[contacto] POST simulado — body:', body);
+        }
+
+        lastSentAt = Date.now();
+        sentTimestamps.push(lastSentAt);
+        btn.innerHTML = 'Solicitud enviada ✓';
+        btn.style.background = '#fff';
+        setMsg('✓ Solicitud enviada con éxito. Un experto de Optitronic te contactará pronto.', 'ok');
+        contactForm.reset();
+        setTimeout(() => { btn.innerHTML = original; btn.style.background = ''; btn.disabled = false; inFlight = false; }, 2400);
+      } catch (err) {
+        btn.innerHTML = original;
+        btn.disabled = false;
+        inFlight = false;
+        let msg;
+        if (err.name === 'AbortError') {
+          msg = 'El servidor tardó demasiado en responder. Intenta de nuevo.';
+        } else if (err.status === 429) {
+          msg = 'Has enviado demasiadas solicitudes. Intenta de nuevo en unos minutos.';
+        } else if (err.status === 400) {
+          msg = err.message || 'Revisa los datos del formulario e intenta de nuevo.';
+        } else if (err.status === 401) {
+          // Firma/timestamp inválido: no exponer detalles técnicos al visitante
+          msg = 'No se pudo validar el envío. Verifica la hora de tu dispositivo e intenta de nuevo.';
+        } else {
+          msg = 'No se pudo enviar la solicitud. Intenta de nuevo o escríbenos por WhatsApp.';
+        }
+        setMsg(msg, 'err');
+      }
+    });
+  </script>
+</body>
+</html>
